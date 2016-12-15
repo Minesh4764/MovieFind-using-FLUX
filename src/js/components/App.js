@@ -1,7 +1,7 @@
 var React = require('react');
 var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
-
+var SearchForm = require('./SearchForm');
 
 var App = React.createClass({
 
@@ -9,7 +9,8 @@ var App = React.createClass({
 
        return(
            <div>
-              MY MOVie Find App</div>
+               <SearchForm/>
+              </div>
 
        )
 

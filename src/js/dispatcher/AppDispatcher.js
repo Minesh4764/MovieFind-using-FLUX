@@ -4,7 +4,7 @@ var assign = require('object-assign');
 
 var  AppDispatcher = assign(new Dispatcher(),{
 
-   var handleViewAction = function(action) {
+    handleViewAction :function(action){
 
         var payload = {
 
