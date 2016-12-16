@@ -8,12 +8,19 @@ var AppActions  = {
         console.log('Searching for Movie' + movie.title)
         AppDispatcher.handleViewAction({
              actionType:AppConstants.SEARCH_MOVIES,
-              Movie:movie
+              movie:movie
 
         })
+  },
 
-  }
+    receiveMovieResults:function (movies) {
+      console.log('at movies');
+      console.log(movies);
+        AppDispatcher.handleViewAction({
+            actionType:AppConstants.RECEIVE_MOVIE_RESULTS,
+            movie:movies
 
+        });
+    }
 };
-
 module.exports = AppActions;

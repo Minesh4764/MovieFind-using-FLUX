@@ -15,7 +15,10 @@ var _movies = [];
 var _selected='';
 
 var AppStore =  assign({},EventEmitter.prototype,{
+     setMovieResult:function(movies) {
+         _movies= movies;
 
+     }
     emitChange :function () {
          this.emit(CHANGE_EVENT);
 
@@ -34,8 +37,18 @@ AppDispatcher.register(function(payload){
     var action = payload.action;
 
     switch(action.actionType) {
+        case AppConstants.SEARCH_MOVIES:
+            console.log('searching for movie' +action.movie.title);
+            AppApi.searchMovies(action.movie)
+            AppStore.emit(CHANGE_EVENT);
+            break;
 
 
+        case AppConstants.RECEIVE_MOVIE_RESULTS:
+             AppStore.setMovieResult(action.movies)
+            AppApi.searchMovies(action.movie);
+
+            break;
     }
 
   return true;

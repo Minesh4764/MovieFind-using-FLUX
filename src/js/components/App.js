@@ -3,8 +3,30 @@ var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm');
 
-var App = React.createClass({
 
+
+function getAppState() {
+
+    return {
+
+    }
+
+}
+
+var App = React.createClass({
+      getInitialState:function() {
+
+           return getAppState();
+      },
+
+    componentDidMount:function() {
+
+        AppStore.addchangeListener(this._onChange);
+    },
+    componentWillUnmount:function() {
+
+        AppStore.removeChangeListener(this._onChange);
+    },
     render:function() {
 
        return(
@@ -14,6 +36,9 @@ var App = React.createClass({
 
        )
 
+    },
+    _onChange :function () {
+        this.setState(getAppState());
     }
 
 });

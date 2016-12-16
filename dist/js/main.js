@@ -19763,14 +19763,21 @@ var AppActions  = {
         console.log('Searching for Movie' + movie.title)
         AppDispatcher.handleViewAction({
              actionType:AppConstants.SEARCH_MOVIES,
-              Movie:movie
+              movie:movie
 
         })
+  },
 
-  }
+    receiveMovieResults:function (movies) {
+      console.log('at movies');
+      console.log(movies);
+        AppDispatcher.handleViewAction({
+            actionType:AppConstants.RECEIVE_MOVIE_RESULTS,
+            movie:movies
 
+        });
+    }
 };
-
 module.exports = AppActions;
 
 },{"../constants/AppConstants":168,"../dispatcher/AppDispatcher":169}],165:[function(require,module,exports){
@@ -19781,9 +19788,23 @@ module.exports = {
 
 
     searchMovies :function(movies){
+     console.log('at api' + movies.title);
+         $.ajax({
+             url:'http://www.omdbapi.com/?s='+movies.title,
+             dataType:'json',
+             cache:false,
+             success:function (data) {
+                 console.log(data);
+                 AppActions.receiveMovieResults(data.Search);
 
+             }.bind(this),
+             error:function(xhr,status,err){
 
-    }
+                 alert(err);
+             }.bind(this)
+
+         });
+    },
 
 };
 
@@ -19793,8 +19814,30 @@ var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm');
 
-var App = React.createClass({displayName: "App",
 
+
+function getAppState() {
+
+    return {
+
+    }
+
+}
+
+var App = React.createClass({displayName: "App",
+      getInitialState:function() {
+
+           return getAppState();
+      },
+
+    componentDidMount:function() {
+
+        AppStore.addchangeListener(this._onChange);
+    },
+    componentWillUnmount:function() {
+
+        AppStore.removeChangeListener(this._onChange);
+    },
     render:function() {
 
        return(
@@ -19804,6 +19847,9 @@ var App = React.createClass({displayName: "App",
 
        )
 
+    },
+    _onChange :function () {
+        this.setState(getAppState());
     }
 
 });
@@ -19852,7 +19898,8 @@ module.exports = SearchForm;
 },{"../actions/AppActions":164,"../stores/AppStore":171,"react":163}],168:[function(require,module,exports){
 module.exports = {
 
-    SEARCH_MOVIES : 'SEARCH_MOVIES'
+    SEARCH_MOVIES : 'SEARCH_MOVIES',
+    RECEIVE_MOVIE_RESULTS:'RECEIVE_MOVIE_RESULTS'
 };
 
 },{}],169:[function(require,module,exports){
@@ -19923,6 +19970,11 @@ AppDispatcher.register(function(payload){
     var action = payload.action;
 
     switch(action.actionType) {
+        case AppConstants.SEARCH_MOVIES:
+            console.log('searching for movie' +action.movie.title);
+            AppApi.searchMovies(action.movie)
+            AppStore.emit(CHANGE_EVENT);
+            break;
 
 
     }
