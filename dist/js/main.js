@@ -19759,7 +19759,15 @@ var AppConstants = require('../constants/AppConstants');
 
 var AppActions  = {
 
+  searchMovies :function(movie) {
+        console.log('Searching for Movie' + movie.title)
+        AppDispatcher.handleViewAction({
+             actionType:AppConstants.SEARCH_MOVIES,
+              Movie:movie
 
+        })
+
+  }
 
 };
 
@@ -19814,7 +19822,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
         return(
             React.createElement("div", {className: "search-form"}, 
                 React.createElement("h1", {className: "text-center"}, " Search for a movies"), 
-            React.createElement("form", null, 
+            React.createElement("form", {onSubmit: this.onSubmit}, 
                   React.createElement("div", {className: "form-group"}, 
                       React.createElement("input", {type: "text", className: "form-control", ref: "movietitle", 
                              placeholder: "Enter a Movie Title.."})
@@ -19826,6 +19834,16 @@ var SearchForm = React.createClass({displayName: "SearchForm",
             )
         )
 
+    },
+    onSubmit:function (e) {
+        e.preventDefault();
+
+         console.log(this.refs.movietitle.value);
+        var movie = {
+             title:this.refs.movietitle.value.trim()
+
+        };
+        AppAction.searchMovies(movie)
     }
 
 });
