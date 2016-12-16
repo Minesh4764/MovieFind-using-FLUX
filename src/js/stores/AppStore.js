@@ -10,7 +10,7 @@ var AppApi =  require('../api/AppApi');
 
 var CHANGE_EVENT= 'change';
 
-var _movies = [];
+var movies = [];
 
 var _selected='';
 
@@ -18,7 +18,7 @@ var AppStore =  assign({},EventEmitter.prototype,{
      setMovieResult:function(movies) {
          _movies= movies;
 
-     }
+     },
     emitChange :function () {
          this.emit(CHANGE_EVENT);
 
@@ -43,10 +43,11 @@ AppDispatcher.register(function(payload){
             AppStore.emit(CHANGE_EVENT);
             break;
 
-
+s
         case AppConstants.RECEIVE_MOVIE_RESULTS:
-             AppStore.setMovieResult(action.movies)
-            AppApi.searchMovies(action.movie);
+             AppStore.setMovieResult(action.movie)
+              console.log(action.movie);
+
 
             break;
     }
