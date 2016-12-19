@@ -19769,8 +19769,8 @@ var AppActions  = {
   },
 
     receiveMovieResults:function (movies) {
-      console.log('at movies');
-      console.log(movies);
+    //  console.log('at movies');
+     // console.log(movies);
         AppDispatcher.handleViewAction({
             actionType:AppConstants.RECEIVE_MOVIE_RESULTS,
             movie:movies
@@ -19780,7 +19780,7 @@ var AppActions  = {
 };
 module.exports = AppActions;
 
-},{"../constants/AppConstants":168,"../dispatcher/AppDispatcher":169}],165:[function(require,module,exports){
+},{"../constants/AppConstants":170,"../dispatcher/AppDispatcher":171}],165:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 
@@ -19813,12 +19813,13 @@ var React = require('react');
 var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm');
-
+var MovieResult = require('./MovieResult');
 
 
 function getAppState() {
 
     return {
+      movies :AppStore.getMovieResult()
 
     }
 
@@ -19839,10 +19840,17 @@ var App = React.createClass({displayName: "App",
         AppStore.removeChangeListener(this._onChange);
     },
     render:function() {
+      if(this.state.movies=='') {
+            var movieResult = '';
 
+      } else {
+
+          movieResult =    React.createElement(MovieResult, {movies: this.state.movies})
+      }
        return(
            React.createElement("div", null, 
-               React.createElement(SearchForm, null)
+               React.createElement(SearchForm, null), 
+               movieResult
               )
 
        )
@@ -19855,7 +19863,66 @@ var App = React.createClass({displayName: "App",
 });
 module.exports = App;
 
-},{"../actions/AppActions":164,"../stores/AppStore":171,"./SearchForm":167,"react":163}],167:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":173,"./MovieResult":168,"./SearchForm":169,"react":163}],167:[function(require,module,exports){
+var React = require('react');
+var AppAction= require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+
+
+var Movie = React.createClass({displayName: "Movie",
+
+    render:function() {
+
+        return(
+            React.createElement("div", {className: "well"}, 
+                this.props.movie.Title
+
+            )
+        )
+
+    },
+
+
+});
+module.exports = Movie;
+
+},{"../actions/AppActions":164,"../stores/AppStore":173,"react":163}],168:[function(require,module,exports){
+var React = require('react');
+var AppAction= require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+var Movie = require('./Movie');
+
+var MovieResult = React.createClass({displayName: "MovieResult",
+
+    render:function() {
+
+        return(
+            React.createElement("div", null, 
+                  React.createElement("h3", {className: "text-center text-capitalize"}, " Movies"), 
+                
+                    this.props.movies.map(function(movie,i){
+
+                        return (
+                                React.createElement(Movie, {movie: movie, key: i})
+                        )
+
+
+                     })
+
+
+
+                
+
+            )
+        )
+
+    },
+
+
+});
+module.exports = MovieResult;
+
+},{"../actions/AppActions":164,"../stores/AppStore":173,"./Movie":167,"react":163}],169:[function(require,module,exports){
 var React = require('react');
 var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19895,14 +19962,14 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 });
 module.exports = SearchForm;
 
-},{"../actions/AppActions":164,"../stores/AppStore":171,"react":163}],168:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":173,"react":163}],170:[function(require,module,exports){
 module.exports = {
 
     SEARCH_MOVIES : 'SEARCH_MOVIES',
     RECEIVE_MOVIE_RESULTS:'RECEIVE_MOVIE_RESULTS'
 };
 
-},{}],169:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 var Dispatcher = require("flux").Dispatcher;
 var assign = require('object-assign');
 
@@ -19923,7 +19990,7 @@ var  AppDispatcher = assign(new Dispatcher(),{
 });
 module.exports = AppDispatcher;
 
-},{"flux":29,"object-assign":32}],170:[function(require,module,exports){
+},{"flux":29,"object-assign":32}],172:[function(require,module,exports){
 
 
 var React = require('react');
@@ -19933,7 +20000,7 @@ var App = require('./components/App');
 
 ReactDom.render(React.createElement(App, null), document.getElementById('app'));
 
-},{"./api/AppApi":165,"./components/App":166,"react":163,"react-dom":34}],171:[function(require,module,exports){
+},{"./api/AppApi":165,"./components/App":166,"react":163,"react-dom":34}],173:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 
@@ -19946,7 +20013,7 @@ var AppApi =  require('../api/AppApi');
 
 var CHANGE_EVENT= 'change';
 
-var movies = [];
+var _movies = [];
 
 var _selected='';
 
@@ -19955,6 +20022,10 @@ var AppStore =  assign({},EventEmitter.prototype,{
          _movies= movies;
 
      },
+
+    getMovieResult :function(){
+      return _movies;
+    },
     emitChange :function () {
          this.emit(CHANGE_EVENT);
 
@@ -19974,15 +20045,14 @@ AppDispatcher.register(function(payload){
 
     switch(action.actionType) {
         case AppConstants.SEARCH_MOVIES:
-            console.log('searching for movie' +action.movie.title);
+           // console.log('searching for movie' +action.movie.title);
             AppApi.searchMovies(action.movie)
             AppStore.emit(CHANGE_EVENT);
             break;
 
-s
         case AppConstants.RECEIVE_MOVIE_RESULTS:
              AppStore.setMovieResult(action.movie)
-              console.log(action.movie);
+            //  console.log(action.movie);
 
 
             break;
@@ -19992,4 +20062,4 @@ s
 });
 module.exports = AppStore;
 
-},{"../api/AppApi":165,"../constants/AppConstants":168,"../dispatcher/AppDispatcher":169,"events":1,"object-assign":32}]},{},[170]);
+},{"../api/AppApi":165,"../constants/AppConstants":170,"../dispatcher/AppDispatcher":171,"events":1,"object-assign":32}]},{},[172]);

@@ -10,7 +10,7 @@ var AppApi =  require('../api/AppApi');
 
 var CHANGE_EVENT= 'change';
 
-var movies = [];
+var _movies = [];
 
 var _selected='';
 
@@ -19,6 +19,10 @@ var AppStore =  assign({},EventEmitter.prototype,{
          _movies= movies;
 
      },
+
+    getMovieResult :function(){
+      return _movies;
+    },
     emitChange :function () {
          this.emit(CHANGE_EVENT);
 
@@ -38,15 +42,14 @@ AppDispatcher.register(function(payload){
 
     switch(action.actionType) {
         case AppConstants.SEARCH_MOVIES:
-            console.log('searching for movie' +action.movie.title);
+           // console.log('searching for movie' +action.movie.title);
             AppApi.searchMovies(action.movie)
             AppStore.emit(CHANGE_EVENT);
             break;
 
-s
         case AppConstants.RECEIVE_MOVIE_RESULTS:
              AppStore.setMovieResult(action.movie)
-              console.log(action.movie);
+            //  console.log(action.movie);
 
 
             break;

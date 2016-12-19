@@ -2,12 +2,13 @@ var React = require('react');
 var AppAction= require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm');
-
+var MovieResult = require('./MovieResult');
 
 
 function getAppState() {
 
     return {
+      movies :AppStore.getMovieResult()
 
     }
 
@@ -28,10 +29,17 @@ var App = React.createClass({
         AppStore.removeChangeListener(this._onChange);
     },
     render:function() {
+      if(this.state.movies=='') {
+            var movieResult = '';
 
+      } else {
+
+          movieResult =    <MovieResult movies={this.state.movies}/>
+      }
        return(
            <div>
                <SearchForm/>
+               {movieResult}
               </div>
 
        )
