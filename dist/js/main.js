@@ -19872,10 +19872,26 @@ var AppStore = require('../stores/AppStore');
 var Movie = React.createClass({displayName: "Movie",
 
     render:function() {
-
+        var link = "http://www.imdb.com/title/" +this.props.movie.imdbID;
         return(
             React.createElement("div", {className: "well"}, 
-                this.props.movie.Title
+
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "col-md-4"}, 
+                        React.createElement("img", {className: "thumbnail", src: this.props.movie.Poster})
+                    ), 
+                    React.createElement("div", {className: "col-md-8"}, 
+                        React.createElement("h4", null, this.props.movie.Title), 
+
+                        React.createElement("ul", {className: "list-group"}, 
+                            React.createElement("li", {className: "list-group-item"}, "Year Released :", this.props.movie.Year), 
+                            React.createElement("li", {className: "list-group-item"}, "IMDBID:", this.props.movie.imdbID)
+
+                        ), 
+                        React.createElement("a", {className: "btn btn-primary", href: link}, "View on IMDB ")
+
+                    )
+                )
 
             )
         )
